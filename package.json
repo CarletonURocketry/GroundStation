@@ -1,22 +1,16 @@
 {
-  "name": "electron-quick-start",
+  "name": "ground_station",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "",
   "main": "main.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
-  ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
-  "devDependencies": {
-    "electron": "~1.7.8"
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gaussian": "^1.1.0",
+    "socket.io": "^2.0.4"
   }
 }

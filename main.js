@@ -1,3 +1,33 @@
+const Rocket = require('./rocket');
+const Altimeter = require('./altimeter');
+const io = require('socket.io')(3000);
+
+const rocket = new Rocket();
+const altimeter = new Altimeter(rocket);
+
+
+const clients = [];
+let time = 0;
+
+io.on('connection', function (client) {
+    console.log('Client connected!');
+    clients.push(client);
+});
+
+const step = 10;
+setInterval(() => {
+    clients.forEach(client => {
+        client.emit('rocket_state', rocket.getState());
+        
+        const altitude = altimeter.sample();        
+        client.emit('altimeter', altitude);
+        
+    });
+    // if (time == 30 * 1000) return;
+    time += step;
+    rocket.simulate(time / 1000, step / 1000);
+}, step);
+
 const electron = require('electron')
 // Module to control application life.
 const app = electron.app
@@ -56,5 +86,3 @@ app.on('activate', function () {
   }
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
