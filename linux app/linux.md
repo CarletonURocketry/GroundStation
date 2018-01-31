@@ -1,6 +1,6 @@
-# Native Linux App
+# Linux App
 
-This is going to be a native implementation of a linux app to display the telemetry data in real-time.
+This is going to be an implementation of a linux app to display the telemetry data in real-time.
 
 **Telemetry Packet Format**:
 
@@ -19,3 +19,7 @@ This is going to be a native implementation of a linux app to display the teleme
 - Display Accelerometer / Gyroscope data
 - Display location of Rocket and Payload on map(s)
 
+## Tools
+
+- Mono
+- GTK#
