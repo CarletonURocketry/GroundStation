@@ -4,7 +4,7 @@ This is going to be a native implementation of a linux app to display the teleme
 
 **Telemetry Packet Format**:
 
-- Mission (Bytes 0-4)
+- Mission Time (Bytes 0-4)
 - ADC Data and Flags (Bytes 4-20)
 - Accelerometer data (Bytes 21-26)
 - Gyroscope data (Bytes 27-33)
