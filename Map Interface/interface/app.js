@@ -1,21 +1,22 @@
 // Import required modules.
 const satellite = require('../core/satellite')
-const localization = require('../core/localization')
-const example = require('../example')
+// const localization = require('../core/localization')
+// const example = require('../example')
 const fs = require('fs')
 
 // Define a map zoom.
-const map_zoom = 20
+const map_zoom = 18
 // Create a new Pixi application.
 const app = new PIXI.Application({ width: window.innerWidth, height: window.innerHeight })
 // Append the app to the HTML document.
 document.body.appendChild(app.view)
 
 // Define the top left tile.
-const topLeft = satellite.project(49.915023,-98.270826, map_zoom)
+const topLeft = satellite.project(33.041191,-107.065507, map_zoom)
 // Define the bottom right tile.
-const bottomRight = satellite.project(49.912647,-98.266170, map_zoom)
+const bottomRight = satellite.project(32.944293,-106.882001, map_zoom)
 // Compute the central tile position.
+// module.exports.createDatabase('spaceport' ,,,18)
 const startX = (topLeft.x + bottomRight.x) / 2
 const startY = (topLeft.y + bottomRight.y) / 2
 
@@ -33,6 +34,7 @@ for (let x = topLeft.x; x <= bottomRight.x; x++) {
 
 // Create a new Pixi container.
 const container = new PIXI.Container()
+
 // Load all the resources.
 PIXI.loader.load(function (loader, resources) {
     // Iterate through all the tiles.
@@ -50,53 +52,53 @@ PIXI.loader.load(function (loader, resources) {
     // Add the container to the stage.
     app.stage.addChild(container)
     // Read an input file from the file system.
-    fs.readFile('./example/aerial.png', (err, data) => {
-        // Include the GPS meta-data.
-        const image = { src: '../example/aerial.png', latitude: 49.905368, longitude: -98.271399, data: data.toString('base64'), width: 883, height: 662 }
-        // Overlay the image onto the map as an example.
-        overlayImage(image)
-    })
+//     fs.readFile('./example/aerial.png', (err, data) => {
+//         // Include the GPS meta-data.
+//         const image = { src: '../example/aerial.png', latitude: 49.905368, longitude: -98.271399, data: data.toString('base64'), width: 883, height: 662 }
+//         // Overlay the image onto the map as an example.
+//         overlayImage(image)
+//     })
 })
 
 // Define a function to overlay an aerial image onto the map.
-const overlayImage = (image) => {
-    // Define the number of samples to take along each edge.
-    const samples = 4
-    // Create a list to store all the vertices.
-    const vertices = new Array(2 * samples * samples)
-    // Compute a homography for the image.
-    localization.computeHomography(image).then(() => {
-        // Sample the image.
-        for (let x = 0; x < samples; x++) {
-            for (let y = 0; y < samples; y++) {
-                // Define a target.
-                const target = { x: (x * image.width / (samples - 1)), y: (y * image.height / (samples - 1)) }
-                // Find a target in the image.
-                const location = localization.locateTarget(target, image)
-                // Project the target location into pixel space.
-                const projection = satellite.projectAccurately(location.latitude, location.longitude, map_zoom)
-                // Set the vertex coordinates.
-                vertices[(2 * y * samples) + (2 * x)] = (projection.x - startX) * 256
-                vertices[(2 * y * samples) + (2 * x) + 1] = (projection.y - startY) * 256
-            }
-        }
-        // Create a new plane.
-        const plane = new PIXI.mesh.Plane(PIXI.Texture.fromImage(image.src), samples, samples)
-        // Hide the plane initially.
-        plane.alpha = 0.001
-        // Add the plane to the container.
-        container.addChild(plane)
-        // Call a function in the future.
-        setTimeout(function () {
-            // Set the plane's vertices.
-            for (let i = 0; i < vertices.length; i++) plane.vertices[i] = vertices[i]
-            // Change the opacity.
-            plane.alpha = 0.75
-            // Refresh the plane.
-            plane.refresh()
-        }, 100)
-    })
-}
+// const overlayImage = (image) => {
+//     // Define the number of samples to take along each edge.
+//     const samples = 4
+//     // Create a list to store all the vertices.
+//     const vertices = new Array(2 * samples * samples)
+//     // Compute a homography for the image.
+//     localization.computeHomography(image).then(() => {
+//         // Sample the image.
+//         for (let x = 0; x < samples; x++) {
+//             for (let y = 0; y < samples; y++) {
+//                 // Define a target.
+//                 const target = { x: (x * image.width / (samples - 1)), y: (y * image.height / (samples - 1)) }
+//                 // Find a target in the image.
+//                 const location = localization.locateTarget(target, image)
+//                 // Project the target location into pixel space.
+//                 const projection = satellite.projectAccurately(location.latitude, location.longitude, map_zoom)
+//                 // Set the vertex coordinates.
+//                 vertices[(2 * y * samples) + (2 * x)] = (projection.x - startX) * 256
+//                 vertices[(2 * y * samples) + (2 * x) + 1] = (projection.y - startY) * 256
+//             }
+//         }
+//         // Create a new plane.
+//         const plane = new PIXI.mesh.Plane(PIXI.Texture.fromImage(image.src), samples, samples)
+//         // Hide the plane initially.
+//         plane.alpha = 0.001
+//         // Add the plane to the container.
+//         container.addChild(plane)
+//         // Call a function in the future.
+//         setTimeout(function () {
+//             // Set the plane's vertices.
+//             for (let i = 0; i < vertices.length; i++) plane.vertices[i] = vertices[i]
+//             // Change the opacity.
+//             plane.alpha = 0.75
+//             // Refresh the plane.
+//             plane.refresh()
+//         }, 100)
+//     })
+// }
 
 // Compute the bounds of the map area.
 const max_x = (startX - topLeft.x) * 256

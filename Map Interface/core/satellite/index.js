@@ -84,7 +84,7 @@ module.exports.getReferenceImage = (latitude, longitude, zoom, label) => {
                 const tileX = (i * 256)
                 const tileY = (j * 256)
                 // Add the tile to the list.
-                tiles.push({ src: `../core/satellite/tiles/${label}/${startX + i}_${startY + j}_${zoom}.jpg`, x: tileX, y: tileY })
+                tiles.push({ src: `../tiles/${label}/${startX + i}_${startY + j}_${zoom}.jpg`, x: tileX, y: tileY })
             }
         }
         // Compute the image size.
@@ -109,7 +109,7 @@ module.exports.getReferenceImage = (latitude, longitude, zoom, label) => {
 // Create a function to create a database.
 module.exports.createDatabase = (label, top_latitude, left_longitude, bottom_latitude, right_longitude, zoom) => {
     // Create a directory for the database if one does nto already exist.
-    if (!fs.existsSync('./core/satellite/tiles/' + label)) fs.mkdirSync('./core/satellite/tiles/' + label)
+    if (!fs.existsSync('./tiles/' + label)) fs.mkdirSync('./tiles/' + label)
     // Compute the tile coordinates of the top left and bottom right tiles.
     const topLeft = module.exports.project(top_latitude, left_longitude, zoom)
     const bottomRight = module.exports.project(bottom_latitude, right_longitude, zoom)
@@ -118,11 +118,21 @@ module.exports.createDatabase = (label, top_latitude, left_longitude, bottom_lat
     for (let x = topLeft.x; x <= bottomRight.x; x++) {
         for (let y = topLeft.y; y <= bottomRight.y; y++) {
             // Check if the image has not already been downloaded.
-            if (!fs.existsSync(`./core/satellite/tiles/${label}/${x}_${y}_${zoom}.jpg`)) {
+            if (!fs.existsSync(`./tiles/${label}/${x}_${y}_${zoom}.jpg`)) {
                 // Download the image.
                 getImage(x, y, zoom).then(image => {
                     // Save the image to the disk.
-                    fs.writeFile(`./core/satellite/tiles/${label}/${x}_${y}_${zoom}.jpg`, image, 'binary')
+                    fs.writeFileSync(`./tiles/${label}/${x}_${y}_${zoom}.jpg`, image, 'binary')
+                    // fs.writeFileSync(`./tiles/${label}/${x}_${y}_${zoom}.jpg`, image, 'binary', (err) => {
+		    // 	if (err) {
+		    // 	    debugger
+		    // 	    console.log(err)
+		    // 	}
+		    // 	else {
+		    // 	    console.log("written to: " + `./tiles/${label}/${x}_${y}_${zoom}.jpg`)
+		    // 	}
+
+		    // })
                 })
             }
         }
@@ -140,4 +150,4 @@ module.exports.getPointCoordinates = (point, satellite_image) => {
     return { latitude: unproject.latitude, longitude: unproject.longitude }
 }
 
-module.exports.createDatabase('spaceport',33.041191,-107.065507,32.944293,-106.882001,18)
+//module.exports.createDatabase('spaceport' ,33.041191,-107.065507,32.944293,-106.882001,18)
