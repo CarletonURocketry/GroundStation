@@ -1,11 +1,14 @@
 // Import required modules.
+    // *** for SIAS
 const satellite = require('../core/satellite')
 // const localization = require('../core/localization')
 // const example = require('../example')
 const fs = require('fs')
+    // CUinSpace
+let $ = require ('jquery')
 
 // Define a map zoom.
-const map_zoom = 18
+const map_zoom = 16
 // Create a new Pixi application.
 const app = new PIXI.Application({ width: window.innerWidth, height: window.innerHeight })
 // Append the app to the HTML document.
@@ -26,7 +29,7 @@ for (let x = topLeft.x; x <= bottomRight.x; x++) {
         // Define the tile name.
         const tile_name = `${x}_${y}_${map_zoom}`
         // Define the file name.
-        const file_name = `../core/satellite/tiles/spaceport/${tile_name}.jpg`
+        const file_name = `../core/satellite/tiles/spaceport16/${tile_name}.jpg`
         // Add the tile to the loader.
         PIXI.loader.add(tile_name, file_name)
     }
@@ -149,3 +152,32 @@ setInterval(function () {
     app.stage.setChildIndex(rectangle, app.stage.children.length - 1)
     app.stage.setChildIndex(mouseLabel, app.stage.children.length - 1)
 }, 100);
+
+// **************************** ********************** ********************** 
+// *** CUinSpace Additions: ***
+// Json data parsing
+
+fs.watch('C:/Users/apeks/Documents/Github/groundstation-backend/frames', { encoding: 'utf8' }, (eventType, filename) => {
+    if (filename) {
+        // Logs the current file.
+        console.log(filename);
+        file1 = fs.readFileSync('C:/Users/apeks/Documents/Github/groundstation-backend/frames/' + filename,  { encoding: 'utf8' });
+        
+        // Checks if the file exists. 
+        if (fs.existsSync('C:/Users/apeks/Documents/Github/groundstation-backend/frames/' + filename))
+        {
+            // Logs the name of the file pasted into the directory.
+            console.log(file1); 
+            // Stores the contents of the JSON file into obj.
+            obj = JSON.parse(file1);
+            // Logs the contents on the console. 
+            console.log(obj);
+        }
+    }    
+  });
+
+// Using a div element to render the JSON data onto the interface.
+var data = {
+    "foobar": "foobaz"
+  };
+  $('#render').jsonViewer(data);

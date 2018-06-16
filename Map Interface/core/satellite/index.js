@@ -150,4 +150,4 @@ module.exports.getPointCoordinates = (point, satellite_image) => {
     return { latitude: unproject.latitude, longitude: unproject.longitude }
 }
 
-//module.exports.createDatabase('spaceport' ,33.041191,-107.065507,32.944293,-106.882001,18)
+//module.exports.createDatabase('spaceport16',33.041191,-107.065507,32.944293,-106.882001,16)
